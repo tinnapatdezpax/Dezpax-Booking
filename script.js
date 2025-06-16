@@ -1,7 +1,3 @@
-// --- Google Apps Script Web App URL for submitting data ---
-// REPLACE THIS with your actual deployed Apps Script Web App URL (the one for doPost)
-const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxE3i-eSQ1R2T6OBT8cqjpYRV_4qsfXAZ1ADYmXJyjebsmd_J08HVl23ecHVooz6Qsn/exec'; 
-
 // --- Global Variables ---
 const calendarGrid = document.querySelector('.calendar-grid');
 const currentMonthYearElem = document.getElementById('currentMonthYear');
@@ -145,7 +141,7 @@ confirmTimeBtn.addEventListener('click', () => {
     }
 });
 
-// --- Form Submission Logic (Using Fetch API) ---
+// --- Form Submission Logic ---
 deliveryForm.addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent default form submission
 
@@ -155,25 +151,32 @@ deliveryForm.addEventListener('submit', async (event) => {
 
     // Get all form data
     const formData = new FormData(deliveryForm);
-    const urlEncodedData = new URLSearchParams(formData).toString();
+    const data = {};
+    for (let [key, value] of formData.entries()) {
+        data[key] = value;
+    }
 
+    // Add an element to display messages (you need to add this div in your HTML)
+    // <div id="message" style="display: none;"></div>
     let messageDiv = document.getElementById('message');
     if (!messageDiv) {
         messageDiv = document.createElement('div');
         messageDiv.id = 'message';
+        // Insert it before the form or at a suitable place
         deliveryForm.parentNode.insertBefore(messageDiv, deliveryForm.nextSibling);
     }
     messageDiv.style.display = 'none'; // Hide previous messages
 
+    // --- IMPORTANT: Replace with your deployed Google Apps Script Web App URL ---
+    const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz1dDNahOcxL3THUu-KGXNI_0AulooArUoD8ukKrGWeJkiOxCnYWsaF5PGuRDIXSleA/exec'; // <<< REPLACE THIS!
+
     try {
         const response = await fetch(GOOGLE_SHEET_WEB_APP_URL, {
             method: 'POST',
-            mode: 'cors', // Ensure CORS is enabled for the request
-            cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: urlEncodedData
+            body: new URLSearchParams(data).toString(),
         });
 
         const result = await response.json();
@@ -193,13 +196,14 @@ deliveryForm.addEventListener('submit', async (event) => {
     } catch (error) {
         console.error('Error submitting form:', error);
         messageDiv.className = 'error';
-        messageDiv.textContent = `เกิดข้อผิดพลาดในการส่งข้อมูล: ${error.message || 'โปรดตรวจสอบคอนโซล'}`;
+        messageDiv.textContent = 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่ภายหลัง';
         messageDiv.style.display = 'block';
     } finally {
         submitBtn.textContent = 'ส่งข้อมูล';
         submitBtn.disabled = false;
     }
 });
+
 
 // --- Initial Render ---
 document.addEventListener('DOMContentLoaded', () => {

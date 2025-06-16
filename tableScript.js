@@ -1,6 +1,9 @@
 // --- Google Apps Script Web App URL for fetching data ---
-// REPLACE THIS with your actual deployed Apps Script Web App URL (the one for doGet)
-const GET_DATA_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxE3i-eSQ1R2T6OBT8cqjpYRV_4qsfXAZ1ADYmXJyjebsmd_J08HVl23ecHVooz6Qsn/exec'; 
+// IMPORTANT: You'll need to deploy a NEW Apps Script Web App for fetching data,
+// or modify your existing doPost to also handle GET requests.
+// For simplicity, I'll assume a new Web App URL for GET request.
+// If you want to use the same Apps Script, we'll need to modify Code.gs to include doGet function.
+const GET_DATA_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz1dDNahOcxL3THUu-KGXNI_0AulooArUoD8ukKrGWeJkiOxCnYWsaF5PGuRDIXSleA/exec'; // <<< REPLACE THIS!
 
 const deliveryTableBody = document.getElementById('deliveryTableBody');
 const loadingMessage = document.getElementById('loading');
@@ -26,11 +29,7 @@ async function fetchDeliveryData() {
     deliveryTableBody.innerHTML = ''; // Clear existing table data
 
     try {
-        const response = await fetch(GET_DATA_WEB_APP_URL, {
-            method: 'GET',
-            mode: 'cors', // Ensure CORS is enabled for the request
-            cache: 'no-cache'
-        });
+        const response = await fetch(GET_DATA_WEB_APP_URL);
         const result = await response.json();
 
         if (result.status === 'success' && result.data) {
@@ -45,35 +44,68 @@ async function fetchDeliveryData() {
             const todayFormatted = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
             let order = 0;
-            result.data.forEach((row) => {
-                // Column indices based on how doGet returns data from Google Sheet
-                // Assuming data order from sheet:
-                // [ชื่อบริษัท, หมายเลขเอกสาร PO, ชื่อผู้ติดต่อ, เบอร์โทร, จำนวนรถส่งสินค้า, วันที่จัดส่ง, เวลาจัดส่ง, หมายเหตุ, Timestamp]
-                // Make sure your Apps Script's doGet sends these columns in this order (or adjust indices below)
+            result.data.forEach((row, index) => {
+                // Ensure correct column indices based on your Google Sheet
+                // Make sure your Google Sheet headers are in this order:
+                // Timestamp | ชื่อบริษัท | หมายเลขเอกสาร PO | ชื่อผู้ติดต่อ | เบอร์โทร | จำนวนรถส่งสินค้า | วันที่จัดส่ง | เวลาจัดส่ง | หมายเหตุ 
                 
-                const deliveryDateCell = row[5]; // 'วันที่จัดส่ง' (Column F)
-                const deliveryTimeCell = row[6]; // 'เวลาจัดส่ง' (Column G)
-                const companyNameCell = row[0]; // 'ชื่อบริษัท' (Column A)
-                const poNumberCell = row[1]; // 'หมายเลขเอกสาร PO' (Column B)
+                const deliveryDateStr = row[6]; // 'วันที่จัดส่ง' is at index 6 (0-indexed)
+                const deliveryTime = row[7]; // 'เวลาจัดส่ง' is at index 7
+                const companyName = row[0]; // 'ชื่อบริษัท' is at index 0 (after Timestamp removed, let's adjust this for incoming data)
+                const poNumber = row[1]; // 'หมายเลขเอกสาร PO' is at index 1
+
+                // Re-adjusting indices based on how data is received from Apps Script
+                // Assuming the Apps Script sends data as it appears in the sheet (including Timestamp at the end if you moved it)
+                // Let's re-verify the Apps Script output. If doGet sends the full row as is from sheet.getValues(),
+                // then 'ชื่อบริษัท' might be index 1, 'หมายเลขเอกสาร PO' index 2, 'วันที่จัดส่ง' index 7, 'เวลาจัดส่ง' index 8.
+                // We need to verify the column order the Apps Script will provide.
+
+                // For now, let's assume the data from Apps Script will be:
+                // [Timestamp, ชื่อบริษัท, หมายเลขเอกสาร PO, ชื่อผู้ติดต่อ, เบอร์โทร, จำนวนรถส่งสินค้า, วันที่จัดส่ง, เวลาจัดส่ง, หมายเหตุ]
+                // If you moved Timestamp to the end, the order will be:
+                // [ชื่อบริษัท, หมายเลขเอกสาร PO, ชื่อผู้ติดต่อ, เบอร์โทร, จำนวนรถส่งสินค้า, วันที่จัดส่ง, เวลาจัดส่ง, หมายเหตุ, Timestamp]
+
+                // Based on your previous sheet headers:
+                // Column A: ชื่อบริษัท
+                // Column B: หมายเลขเอกสาร PO
+                // Column C: ชื่อผู้ติดต่อ
+                // Column D: เบอร์โทร
+                // Column E: จำนวนรถส่งสินค้า
+                // Column F: วันที่จัดส่ง
+                // Column G: เวลาจัดส่ง
+                // Column H: หมายเหตุ
+                // Column I: Timestamp (after you move it)
+
+                // So if your Apps Script fetches data directly from the sheet, indices will be:
+                // ชื่อบริษัท (index 0)
+                // หมายเลขเอกสาร PO (index 1)
+                // ...
+                // วันที่จัดส่ง (index 5)
+                // เวลาจัดส่ง (index 6)
+                // หมายเหตุ (index 7)
+                // Timestamp (index 8)
+
+                const deliveryDateCell = row[5]; // Assuming 'วันที่จัดส่ง' is 6th column (index 5)
+                const deliveryTimeCell = row[6]; // Assuming 'เวลาจัดส่ง' is 7th column (index 6)
+                const companyNameCell = row[0]; // Assuming 'ชื่อบริษัท' is 1st column (index 0)
+                const poNumberCell = row[1]; // Assuming 'หมายเลขเอกสาร PO' is 2nd column (index 1)
 
                 // Convert delivery date from DD/MM/YYYY to YYYY-MM-DD for comparison
                 let compareDate = '';
-                if (deliveryDateCell && typeof deliveryDateCell === 'string') {
+                if (deliveryDateCell) {
                     const parts = deliveryDateCell.split('/');
                     if (parts.length === 3) {
                         compareDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
                     }
-                } else if (deliveryDateCell instanceof Date) { // If Apps Script sends actual Date objects
-                    compareDate = `${deliveryDateCell.getFullYear()}-${String(deliveryDateCell.getMonth() + 1).padStart(2, '0')}-${String(deliveryDateCell.getDate()).padStart(2, '0')}`;
                 }
-
 
                 // Only show entries for today's date
                 if (compareDate === todayFormatted) {
                     order++;
                     const rowElement = document.createElement('tr');
-                    if (order === 1) { // Highlight the first row from the filtered list
-                        rowElement.classList.add('highlighted');
+                    // Add highlighted class for the first row, if desired (from example image)
+                    if (order === 1) {
+                         rowElement.classList.add('highlighted');
                     }
                     rowElement.innerHTML = `
                         <td data-label="ลำดับ">${order}</td>
@@ -86,7 +118,7 @@ async function fetchDeliveryData() {
             });
 
             if (order === 0) { // If no deliveries for today were found
-                deliveryTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">ไม่มีข้อมูลการจัดส่งสำหรับวันนี้</td></tr>';
+                 deliveryTableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">ไม่มีข้อมูลการจัดส่งสำหรับวันนี้</td></tr>';
             }
 
 

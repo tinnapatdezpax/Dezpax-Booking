@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Specific styles for the table page (can be merged into style.css if preferred) */
+        /* Specific styles for the table page */
         body {
             background-color: #f4f7f6;
         }
@@ -19,7 +19,6 @@
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             padding: 30px;
-            flex-grow: 1; /* Allow container to grow and push footer down */
         }
 
         .table-header-content {
@@ -115,7 +114,7 @@
                 width: 100%;
             }
             .delivery-table thead {
-                display: none; /* Hide table headers */
+                display: none; /* Hide table headers (but display them for the first row) */
             }
             .delivery-table tr {
                 margin-bottom: 15px;
@@ -139,6 +138,7 @@
                 font-weight: bold;
             }
         }
+
     </style>
 </head>
 <body>
@@ -147,8 +147,7 @@
             <img src="https://i.ibb.co/3WqP49g/DEZPAX-Food-Packaging-Made-Easy.jpg" alt="DEZPAX Logo">
         </div>
         <nav class="main-nav">
-            <a href="index.html" class="nav-item">กรอกข้อมูลการจัดส่ง</a>
-            <a href="table.html" class="nav-item active">ตารางจัดส่งวันนี้</a>
+            <a href="index.html" class="nav-item">กรอกข้อมูลการจัดส่ง</a> <a href="table.html" class="nav-item active">ตารางจัดส่งวันนี้</a>
         </nav>
     </header>
 
@@ -179,6 +178,11 @@
         </div>
     </main>
 
+    <script>
+        // Use a new script file specifically for table.html
+        // Or if you prefer, integrate this into a single script.js with conditional logic
+        // For simplicity, let's keep it separate for now.
+    </script>
     <script src="tableScript.js"></script>
 </body>
 </html>
