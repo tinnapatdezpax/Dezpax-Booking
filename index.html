@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบฟอร์มจัดส่งสินค้า</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">
+            <img src="https://i.ibb.co/3WqP49g/DEZPAX-Food-Packaging-Made-Easy.jpg" alt="DEZPAX Logo">
+        </div>
+        <nav class="main-nav">
+            <a href="index.html" class="nav-item">กรอกข้อมูลการจัดส่ง</a>
+            <a href="table.html" class="nav-item active">ตารางจัดส่งวันนี้</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="form-section">
+            <h2 class="form-title">ข้อมูลการจัดส่ง</h2>
+            <form id="deliveryForm">
+                <div class="form-group">
+                    <label for="companyName">ชื่อบริษัท <span class="required">*</span></label>
+                    <input type="text" id="companyName" name="ชื่อบริษัท" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="poNumber">หมายเลขเอกสาร PO</label>
+                    <input type="text" id="poNumber" name="หมายเลขเอกสาร PO">
+                </div>
+
+                <div class="form-group">
+                    <label for="contactName">ชื่อผู้ติดต่อ <span class="required">*</span></label>
+                    <input type="text" id="contactName" name="ชื่อผู้ติดต่อ" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contactPhone">เบอร์โทร <span class="required">*</span></label>
+                    <input type="tel" id="contactPhone" name="เบอร์โทร" required pattern="[0-9]{10}" placeholder="เช่น 08XXXXXXXX">
+                    <small>รูปแบบ: 08XXXXXXXX (10 หลัก)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="numVehicles">จำนวนรถส่งสินค้า <span class="required">*</span></label>
+                    <input type="number" id="numVehicles" name="จำนวนรถส่งสินค้า" required min="1" value="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="deliveryDate">วันที่จัดส่ง <span class="required">*</span></label>
+                    <input type="text" id="deliveryDate" name="วันที่จัดส่ง" readonly required placeholder="เลือกจากปฏิทิน">
+                </div>
+
+                <div class="form-group">
+                    <label for="deliveryTime">เวลาจัดส่ง <span class="required">*</span></label>
+                    <input type="text" id="deliveryTime" name="เวลาจัดส่ง" readonly required placeholder="เลือกวันที่เพื่อกำหนดเวลา">
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">หมายเหตุ</label>
+                    <textarea id="notes" name="หมายเหตุ" rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">ส่งข้อมูล</button>
+                
+                <div id="message" style="display: none;"></div>
+            </form>
+        </div>
+
+        <div class="calendar-section">
+            <div class="calendar-header">
+                <button id="prevMonth" class="nav-arrow"><i class="fas fa-chevron-left"></i></button>
+                <h3 id="currentMonthYear">มิถุนายน 2025</h3>
+                <button id="nextMonth" class="nav-arrow"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="calendar-grid">
+                <div class="day-name">อา</div>
+                <div class="day-name">จ</div>
+                <div class="day-name">อ</div>
+                <div class="day-name">พ</div>
+                <div class="day-name">พฤ</div>
+                <div class="day-name">ศ</div>
+                <div class="day-name">ส</div>
+            </div>
+        </div>
+    </main>
+
+    <div id="timeModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>เลือกช่วงเวลาจัดส่ง</h2>
+            <div class="form-group">
+                <label for="startTime">เวลาเริ่มต้น <span class="required">*</span></label>
+                <input type="time" id="startTime" required>
+            </div>
+            <div class="form-group">
+                <label for="endTime">เวลาสิ้นสุด <span class="required">*</span></label>
+                <input type="time" id="endTime" required>
+            </div>
+            <button id="confirmTime" class="btn-confirm">ยืนยันเวลา</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

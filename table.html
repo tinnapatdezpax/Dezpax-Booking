@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตารางจัดส่งวันนี้</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Specific styles for the table page */
+        body {
+            background-color: #f4f7f6;
+        }
+
+        .table-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+        }
+
+        .table-header-content {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .table-header-content h1 {
+            font-size: 2.2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .table-header-content p {
+            font-size: 1.5em;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .delivery-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .delivery-table th,
+        .delivery-table td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .delivery-table th {
+            background-color: #b76c8c; /* Header background color */
+            color: white;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .delivery-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .delivery-table tbody tr:hover {
+            background-color: #f0e6ed;
+        }
+
+        .delivery-table tbody tr.highlighted {
+            background-color: #d4edda; /* Green highlight from your example */
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .loading-message, .error-message {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2em;
+            color: #888;
+        }
+        .error-message {
+            color: #e74c3c;
+        }
+
+        .back-button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .back-button {
+            background-color: #6c757d; /* Grey button */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            text-decoration: none; /* For anchor tag */
+        }
+
+        .back-button:hover {
+            background-color: #5a6268;
+        }
+        
+        /* Responsive adjustments for table */
+        @media (max-width: 768px) {
+            .table-container {
+                padding: 20px;
+                margin: 20px auto;
+            }
+            .delivery-table, .delivery-table tbody, .delivery-table tr, .delivery-table th, .delivery-table td {
+                display: block;
+                width: 100%;
+            }
+            .delivery-table thead {
+                display: none; /* Hide table headers (but display them for the first row) */
+            }
+            .delivery-table tr {
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            }
+            .delivery-table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+            .delivery-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 15px;
+                width: calc(50% - 30px);
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">
+            <img src="https://i.ibb.co/3WqP49g/DEZPAX-Food-Packaging-Made-Easy.jpg" alt="DEZPAX Logo">
+        </div>
+        <nav class="main-nav">
+            <a href="index.html" class="nav-item">กรอกข้อมูลการจัดส่ง</a> <a href="table.html" class="nav-item active">ตารางจัดส่งวันนี้</a>
+        </nav>
+    </header>
+
+    <main class="table-container">
+        <div class="table-header-content">
+            <h1>ตารางจัดส่งสินค้า</h1>
+            <p id="currentDateDisplay">16 มิถุนายน 2568</p>
+        </div>
+        
+        <div id="loading" class="loading-message">กำลังโหลดข้อมูล...</div>
+        <div id="error" class="error-message" style="display: none;"></div>
+
+        <table class="delivery-table">
+            <thead>
+                <tr>
+                    <th>ลำดับ</th>
+                    <th>เวลา</th>
+                    <th>ชื่อบริษัท</th>
+                    <th>PO Number</th>
+                </tr>
+            </thead>
+            <tbody id="deliveryTableBody">
+                </tbody>
+        </table>
+
+        <div class="back-button-container">
+            <a href="index.html" class="back-button">กลับหน้าหลัก</a>
+        </div>
+    </main>
+
+    <script>
+        // Use a new script file specifically for table.html
+        // Or if you prefer, integrate this into a single script.js with conditional logic
+        // For simplicity, let's keep it separate for now.
+    </script>
+    <script src="tableScript.js"></script>
+</body>
+</html>
