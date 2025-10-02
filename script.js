@@ -1,6 +1,3 @@
-// Google Apps Script Web App URL for submitting data
-const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzLm8B8n8RMCdIe-iUp2C9wck6DcQNnKY-cIdl2jFg2VvJmm6FKiyHJT6XSNSP1FJCp/exec'; // URL provided by user
-
 // --- Global Variables ---
 const calendarGrid = document.querySelector('.calendar-grid');
 const currentMonthYearElem = document.getElementById('currentMonthYear');
@@ -144,7 +141,7 @@ confirmTimeBtn.addEventListener('click', () => {
     }
 });
 
-// --- Form Submission Logic (Using Fetch API) ---
+// --- Form Submission Logic ---
 deliveryForm.addEventListener('submit', async (event) => {
     event.preventDefault(); // Prevent default form submission
 
@@ -154,32 +151,33 @@ deliveryForm.addEventListener('submit', async (event) => {
 
     // Get all form data
     const formData = new FormData(deliveryForm);
-    const urlEncodedData = new URLSearchParams(formData).toString();
+    const data = {};
+    for (let [key, value] of formData.entries()) {
+        data[key] = value;
+    }
 
+    // Add an element to display messages (you need to add this div in your HTML)
+    // <div id="message" style="display: none;"></div>
     let messageDiv = document.getElementById('message');
     if (!messageDiv) {
         messageDiv = document.createElement('div');
         messageDiv.id = 'message';
+        // Insert it before the form or at a suitable place
         deliveryForm.parentNode.insertBefore(messageDiv, deliveryForm.nextSibling);
     }
     messageDiv.style.display = 'none'; // Hide previous messages
 
+    // --- IMPORTANT: Replace with your deployed Google Apps Script Web App URL ---
+    const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz1dDNahOcxL3THUu-KGXNI_0AulooArUoD8ukKrGWeJkiOxCnYWsaF5PGuRDIXSleA/exec'; // <<< REPLACE THIS!
+
     try {
         const response = await fetch(GOOGLE_SHEET_WEB_APP_URL, {
             method: 'POST',
-            mode: 'cors', // Ensure CORS is enabled for the request
-            cache: 'no-cache',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: urlEncodedData
+            body: new URLSearchParams(data).toString(),
         });
-
-        // Check for HTTP errors (e.g., 404, 500) before parsing JSON
-        if (!response.ok) {
-            const errorText = await response.text(); // Get raw error text
-            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-        }
 
         const result = await response.json();
 
@@ -198,13 +196,14 @@ deliveryForm.addEventListener('submit', async (event) => {
     } catch (error) {
         console.error('Error submitting form:', error);
         messageDiv.className = 'error';
-        messageDiv.textContent = `เกิดข้อผิดพลาดในการส่งข้อมูล: ${error.message || 'โปรดตรวจสอบคอนโซล'}`;
+        messageDiv.textContent = 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่ภายหลัง';
         messageDiv.style.display = 'block';
     } finally {
         submitBtn.textContent = 'ส่งข้อมูล';
         submitBtn.disabled = false;
     }
 });
+
 
 // --- Initial Render ---
 document.addEventListener('DOMContentLoaded', () => {
