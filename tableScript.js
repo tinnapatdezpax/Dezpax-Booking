@@ -3,7 +3,7 @@
 // or modify your existing doPost to also handle GET requests.
 // For simplicity, I'll assume a new Web App URL for GET request.
 // If you want to use the same Apps Script, we'll need to modify Code.gs to include doGet function.
-const GET_DATA_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz1dDNahOcxL3THUu-KGXNI_0AulooArUoD8ukKrGWeJkiOxCnYWsaF5PGuRDIXSleA/exec'; // <<< REPLACE THIS!
+const GET_DATA_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxW7KUQkjzY7mZ_cDUlWr1I2PkqCAsKktPNoxE1X0o_7wmS0XcPf2jreDSpLAZLC_6v/exec'; // <<< REPLACE THIS!
 
 const deliveryTableBody = document.getElementById('deliveryTableBody');
 const loadingMessage = document.getElementById('loading');
