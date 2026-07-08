@@ -168,7 +168,7 @@ deliveryForm.addEventListener('submit', async (event) => {
     messageDiv.style.display = 'none'; // Hide previous messages
 
     // --- IMPORTANT: Replace with your deployed Google Apps Script Web App URL ---
-    const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz1dDNahOcxL3THUu-KGXNI_0AulooArUoD8ukKrGWeJkiOxCnYWsaF5PGuRDIXSleA/exec'; // <<< REPLACE THIS!
+    const GOOGLE_SHEET_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxW7KUQkjzY7mZ_cDUlWr1I2PkqCAsKktPNoxE1X0o_7wmS0XcPf2jreDSpLAZLC_6v/exec'; // <<< REPLACE THIS!
 
     try {
         const response = await fetch(GOOGLE_SHEET_WEB_APP_URL, {
